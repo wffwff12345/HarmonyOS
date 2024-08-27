@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.advertisement.admin.mapper.AdvDeviceMapper">
+
+    <resultMap type="AdvDevice" id="AdvDeviceResult">
+        <result property="id"    column="id"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceMac"    column="device_mac"    />
+        <result property="statusCode"    column="status_code"    />
+        <result property="changeCode"    column="change_code"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAdvDeviceVo">
+        select id, device_name, device_mac, status_code, change_code, create_by, create_time, update_by, update_time from adv_device
+    </sql>
+
+    <select id="selectAdvDeviceList" parameterType="AdvDevice" resultMap="AdvDeviceResult">
+        <include refid="selectAdvDeviceVo"/>
+        <where>
+            <if test="deviceName != null  and deviceName != ''"> and device_name like concat('%', #{deviceName}, '%')</if>
+            <if test="deviceMac != null  and deviceMac != ''"> and device_mac = #{deviceMac}</if>
+            <if test="statusCode != null  and statusCode != ''"> and status_code = #{statusCode}</if>
+            <if test="changeCode != null  and changeCode != ''"> and change_code = #{changeCode}</if>
+        </where>
+    </select>
+
+    <select id="selectAdvDeviceById" parameterType="Long" resultMap="AdvDeviceResult">
+        <include refid="selectAdvDeviceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAdvDevice" parameterType="AdvDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into adv_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceName != null">device_name,</if>
+            <if test="deviceMac != null">device_mac,</if>
+            <if test="statusCode != null">status_code,</if>
+            <if test="changeCode != null">change_code,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceName != null">#{deviceName},</if>
+            <if test="deviceMac != null">#{deviceMac},</if>
+            <if test="statusCode != null">#{statusCode},</if>
+            <if test="changeCode != null">#{changeCode},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAdvDevice" parameterType="AdvDevice">
+        update adv_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="deviceMac != null">device_mac = #{deviceMac},</if>
+            <if test="statusCode != null">status_code = #{statusCode},</if>
+            <if test="changeCode != null">change_code = #{changeCode},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdvDeviceById" parameterType="Long">
+        delete from adv_device where id = #{id}
+    </delete>
+
+    <delete id="deleteAdvDeviceByIds" parameterType="String">
+        delete from adv_device where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
